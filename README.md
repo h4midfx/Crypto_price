@@ -26,7 +26,7 @@
 </head>
 <body>
   <!-- Afghanische Flagge -->
-  <img id="flag" src="https://upload.wikimedia.org/wikipedia/commons/9/9a/Flag_of_Afghanistan_(2013%E2%80%932021).svg" alt="Afghan Flag" />
+  <img id="flag" src="https://wallpapercave.com/wp/wp4056551.jpg" alt="Afghan Flag" />
 
   <!-- Titel in Dari und Englisch -->
   <h1>قیمت بیت‌کوین و ارزهای دیجیتال</h1>
