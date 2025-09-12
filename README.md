@@ -27,7 +27,7 @@
 <body>
   <!-- Afghanische Flagge -->
   <img id="flag" src="https://wallpapercave.com/wp/wp4056551.jpg" alt="Afghan Flag" />
- <img id="flag" src="https://wallpapercave.com/wp/wp4056551.jpg" alt="Afghan Flag" />
+ <img id="flag" src="https://wallpaperaccess.com/full/458338.jpg" alt="Iran Flag" />
   <!-- Titel in Dari und Englisch -->
   <h1>قیمت بیت‌کوین و ارزهای دیجیتال</h1>
   <h2>Bitcoin & Crypto Prices</h2>
