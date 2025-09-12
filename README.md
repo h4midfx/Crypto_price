@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+
 <html lang="fa"> <!-- fa für Dari (Persisch) -->
 <head>
   <meta charset="UTF-8" />
