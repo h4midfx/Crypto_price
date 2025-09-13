@@ -1,4 +1,4 @@
-
+<!DOCTYPE html>
 <html lang="fa">
 <head>
   <meta charset="UTF-8">
@@ -56,7 +56,7 @@
 </head>
 <body>
   <header>
-    <img src="https://share.google/images/699aFRetVMRl6gESN" alt="پرچم افغانستان">
+    <img src="https://share.google/images/TeU5xhywUxmPAKeBB" alt="پرچم افغانستان">
     <h1>💰 قیمت لحظه‌ای ارزهای دیجیتال (بر حسب USDT)</h1>
   </header>
 
