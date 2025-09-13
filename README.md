@@ -1,110 +1,200 @@
-<div id="crypto-widget" style="font-family:sans-serif; color:#fff; text-align:center; padding:20px; background:linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1627485044552-9942a2f0f153?auto=format&fit=crop&w=1950&q=80'); background-size:cover; border-radius:10px;">
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>قیمت کریپتو و شطرنج</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            text-align: center;
+            padding: 20px;
+        }
+        img.flag {
+            width: 100px;
+            margin-bottom: 10px;
+        }
+        h1 {
+            color: #333;
+        }
+        table {
+            margin: 20px auto;
+            border-collapse: collapse;
+            width: 80%;
+            max-width: 600px;
+        }
+        th, td {
+            padding: 12px;
+            border: 1px solid #ccc;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+        td {
+            background-color: #fff;
+        }
+        .positive { color: green; }
+        .negative { color: red; }
 
-  <header>
-    <img src="https://upload.wikimedia.org/wikipedia/commons/5/5c/Flag_of_Afghanistan_%282004%E2%80%932021%29.svg" alt="پرچم افغانستان" style="width:100px; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.5);">
-    <h2 style="margin-top:10px;">نرخ لحظه‌ای ارزهای دیجیتال و ارزهای فیات</h2>
-  </header>
+        /* سبک شطرنج */
+        #chessboard {
+            margin: 40px auto;
+            display: grid;
+            grid-template-columns: repeat(8, 60px);
+            grid-template-rows: repeat(8, 60px);
+            border: 2px solid #333;
+        }
+        .cell {
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            cursor: pointer;
+        }
+        .white { background-color: #f0d9b5; }
+        .black { background-color: #b58863; }
+        #status { margin-top: 20px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <!-- پرچم افغانستان -->
+    <img src="https://upload.wikimedia.org/wikipedia/commons/5/5c/Flag_of_Afghanistan.svg" alt="پرچم افغانستان" class="flag">
+    
+    <h1>قیمت ارزهای دیجیتال</h1>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>ارز</th>
+                <th>قیمت (USD)</th>
+                <th>تغییر ۲۴ ساعته</th>
+            </tr>
+        </thead>
+        <tbody id="crypto-table"></tbody>
+    </table>
 
-  <div class="crypto-grid" style="display:flex; flex-wrap:wrap; justify-content:center; gap:15px; margin:20px 0;" id="crypto-grid">
-    <div>در حال بارگذاری...</div>
-  </div>
+    <h1>بازی شطرنج با کامپیوتر</h1>
+    <div id="chessboard"></div>
+    <div id="status"></div>
 
-  <div style="margin:10px auto; font-size:16px; background:rgba(0,0,0,0.6); display:inline-block; padding:10px 15px; border-radius:8px;">
-    ⚡ گروه تلگرامی و کانال بزودی فعال می‌شوند!<br>
-    📚 آموزش‌های رایگان از طرف اساتید به زودی اضافه می‌شوند!
-  </div>
+    <script>
+        // =================== قیمت کریپتو ===================
+        const cryptoTable = document.getElementById('crypto-table');
+        const coins = ['bitcoin', 'ethereum', 'dogecoin', 'litecoin', 'ripple'];
 
-  <div style="margin-top:15px; font-size:16px; background:rgba(0,0,0,0.6); display:inline-block; padding:10px 15px; border-radius:8px;">
-    💡 پیشنهادی داری؟  
-    <a href="mailto:Bhack050@gmail.com" style="color:#00ccff; font-weight:bold;">ایمیل بده</a> | 
-    <a href="https://t.me/h4mid_fx" target="_blank" style="color:#00ccff; font-weight:bold;">تلگرام</a>
-  </div>
+        async function fetchCryptoData() {
+            const response = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${coins.join(',')}&vs_currencies=usd&include_24hr_change=true`);
+            const data = await response.json();
 
-</div>
+            cryptoTable.innerHTML = '';
+            coins.forEach(coin => {
+                const price = data[coin].usd.toFixed(2);
+                const change = data[coin].usd_24h_change.toFixed(2);
+                const changeClass = change >= 0 ? 'positive' : 'negative';
+                cryptoTable.innerHTML += `
+                    <tr>
+                        <td>${coin.charAt(0).toUpperCase() + coin.slice(1)}</td>
+                        <td>$${price}</td>
+                        <td class="${changeClass}">${change}%</td>
+                    </tr>
+                `;
+            });
+        }
 
-<script>
-(async function(){
-  const cryptoSymbols = [
-    {name:"بیتکوین", binance:"BTCUSDT", logo:"https://cryptologos.cc/logos/bitcoin-btc-logo.png"},
-    {name:"اتریوم", binance:"ETHUSDT", logo:"https://cryptologos.cc/logos/ethereum-eth-logo.png"},
-    {name:"ترون", binance:"TRXUSDT", logo:"https://cryptologos.cc/logos/tron-trx-logo.png"},
-    {name:"دوج", binance:"DOGEUSDT", logo:"https://cryptologos.cc/logos/dogecoin-doge-logo.png"},
-    {name:"XRP", binance:"XRPUSDT", logo:"https://cryptologos.cc/logos/xrp-xrp-logo.png"},
-    {name:"Litecoin", binance:"LTCUSDT", logo:"https://cryptologos.cc/logos/litecoin-ltc-logo.png"},
-    {name:"Cardano", binance:"ADAUSDT", logo:"https://cryptologos.cc/logos/cardano-ada-logo.png"},
-    {name:"Solana", binance:"SOLUSDT", logo:"https://cryptologos.cc/logos/solana-sol-logo.png"},
-    {name:"Polkadot", binance:"DOTUSDT", logo:"https://cryptologos.cc/logos/polkadot-dot-logo.png"},
-    {name:"Shiba Inu", binance:"SHIBUSDT", logo:"https://cryptologos.cc/logos/shiba-inu-shib-logo.png"},
-    {name:"Avalanche", binance:"AVAXUSDT", logo:"https://cryptologos.cc/logos/avalanche-avax-logo.png"},
-    {name:"Polygon", binance:"MATICUSDT", logo:"https://cryptologos.cc/logos/polygon-matic-logo.png"},
-    {name:"Dogelon Mars", binance:"ELONUSDT", logo:"https://cryptologos.cc/logos/dogelon-mars-elon-logo.png"},
-    {name:"Stellar", binance:"XLMUSDT", logo:"https://cryptologos.cc/logos/stellar-xlm-logo.png"},
-    {name:"Cosmos", binance:"ATOMUSDT", logo:"https://cryptologos.cc/logos/cosmos-atom-logo.png"},
-    {name:"VeChain", binance:"VETUSDT", logo:"https://cryptologos.cc/logos/vechain-vet-logo.png"},
-    {name:"TRON", binance:"TRXUSDT", logo:"https://cryptologos.cc/logos/tron-trx-logo.png"},
-    {name:"Algorand", binance:"ALGOUSDT", logo:"https://cryptologos.cc/logos/algorand-algo-logo.png"},
-    {name:"NEO", binance:"NEOUSDT", logo:"https://cryptologos.cc/logos/neo-neo-logo.png"},
-    {name:"Tezos", binance:"XTZUSDT", logo:"https://cryptologos.cc/logos/tezos-xtz-logo.png"}
-  ];
-  const fiatSymbols = [
-    {name:"دلار آمریکا", code:"USD"},
-    {name:"یورو", code:"EUR"},
-    {name:"پوند", code:"GBP"}
-  ];
+        fetchCryptoData();
+        setInterval(fetchCryptoData, 15000); // هر ۱۵ ثانیه
 
-  async function loadCrypto(){
-    const grid = document.getElementById('crypto-grid');
-    grid.innerHTML = '';
-    for(let sym of cryptoSymbols){
-      try{
-        const resPrice = await fetch(`https://api.binance.com/api/v3/ticker/price?symbol=${sym.binance}`);
-        const priceData = await resPrice.json();
-        const price = parseFloat(priceData.price).toFixed(4);
+        // =================== شطرنج ===================
+        const board = document.getElementById('chessboard');
+        let cells = [];
+        let boardState = [];
+        let selected = null;
 
-        const res24h = await fetch(`https://api.binance.com/api/v3/ticker/24hr?symbol=${sym.binance}`);
-        const changeData = await res24h.json();
-        const change = parseFloat(changeData.priceChangePercent).toFixed(2);
-        const cls = change >= 0 ? "color:#00ff00":"color:#ff3333";
+        const initialBoard = [
+            ['♜','♞','♝','♛','♚','♝','♞','♜'],
+            ['♟','♟','♟','♟','♟','♟','♟','♟'],
+            ['','','','','','','',''],
+            ['','','','','','','',''],
+            ['','','','','','','',''],
+            ['','','','','','','',''],
+            ['♙','♙','♙','♙','♙','♙','♙','♙'],
+            ['♖','♘','♗','♕','♔','♗','♘','♖']
+        ];
 
-        const card = document.createElement('div');
-        card.style.background="rgba(0,0,0,0.7)";
-        card.style.padding="10px";
-        card.style.borderRadius="8px";
-        card.style.width="120px";
-        card.style.color="#fff";
-        card.style.textAlign="center";
-        card.style.boxShadow="0 2px 6px rgba(0,0,0,0.5)";
-        card.style.margin="5px";
-        card.innerHTML = `<img src="${sym.logo}" style="width:36px;height:36px;margin-bottom:5px;"><div>${sym.name}</div><div>${price} USDT</div><div style="${cls}">${change}%</div>`;
-        grid.appendChild(card);
-      }catch(e){ console.error(e); }
-    }
+        function createBoard() {
+            board.innerHTML = '';
+            cells = [];
+            for (let r = 0; r < 8; r++) {
+                let row = [];
+                for (let c = 0; c < 8; c++) {
+                    const cell = document.createElement('div');
+                    cell.classList.add('cell');
+                    cell.classList.add((r+c)%2 === 0 ? 'white' : 'black');
+                    cell.dataset.row = r;
+                    cell.dataset.col = c;
+                    cell.innerText = initialBoard[r][c];
+                    cell.addEventListener('click', onCellClick);
+                    board.appendChild(cell);
+                    row.push(cell);
+                }
+                cells.push(row);
+            }
+            boardState = initialBoard.map(r => r.slice());
+        }
 
-    // نرخ ارزهای فیات
-    try{
-      const resFiat = await fetch('https://api.exchangerate.host/latest?base=USD&symbols=AFN,EUR,GBP');
-      const dataFiat = await resFiat.json();
-      const afnRateUSD = dataFiat.rates.AFN;
-      const afnRateEUR = dataFiat.rates.AFN / dataFiat.rates.EUR;
-      const afnRateGBP = dataFiat.rates.AFN / dataFiat.rates.GBP;
+        function onCellClick(e) {
+            const r = parseInt(e.currentTarget.dataset.row);
+            const c = parseInt(e.currentTarget.dataset.col);
+            const piece = boardState[r][c];
 
-      for(let fiat of fiatSymbols){
-        let priceAFN = fiat.code==="USD"?afnRateUSD.toFixed(2): fiat.code==="EUR"?afnRateEUR.toFixed(2): afnRateGBP.toFixed(2);
-        const card = document.createElement('div');
-        card.style.background="rgba(0,0,0,0.7)";
-        card.style.padding="10px";
-        card.style.borderRadius="8px";
-        card.style.width="120px";
-        card.style.color="#fff";
-        card.style.textAlign="center";
-        card.style.boxShadow="0 2px 6px rgba(0,0,0,0.5)";
-        card.style.margin="5px";
-        card.innerHTML = `<div>${fiat.name}</div><div>${priceAFN} AFN</div>`;
-        grid.appendChild(card);
-      }
-    }catch(e){ console.error(e);}
-  }
-  loadCrypto();
-  setInterval(loadCrypto,10000);
-})();
-</script>
+            if (selected) {
+                // حرکت دادن مهره
+                boardState[r][c] = boardState[selected.row][selected.col];
+                boardState[selected.row][selected.col] = '';
+                selected = null;
+                renderBoard();
+                setTimeout(aiMove, 500); // حرکت کامپیوتر بعد از نیم ثانیه
+            } else if (piece && piece === piece.toUpperCase()) {
+                selected = {row: r, col: c};
+            }
+        }
+
+        function renderBoard() {
+            for (let r = 0; r < 8; r++) {
+                for (let c = 0; c < 8; c++) {
+                    cells[r][c].innerText = boardState[r][c];
+                }
+            }
+        }
+
+        function aiMove() {
+            // حرکت تصادفی ساده برای مهره‌های سیاه
+            let moves = [];
+            for (let r = 0; r < 8; r++) {
+                for (let c = 0; c < 8; c++) {
+                    if (boardState[r][c] && boardState[r][c] === boardState[r][c].toLowerCase()) {
+                        // مهره سیاه، حرکات به جلو فقط ساده
+                        let dr = 1;
+                        let nr = r + dr;
+                        if (nr < 8 && boardState[nr][c] === '') {
+                            moves.push({from:{r,c}, to:{r:nr,c}});
+                        }
+                    }
+                }
+            }
+            if (moves.length > 0) {
+                const move = moves[Math.floor(Math.random() * moves.length)];
+                boardState[move.to.r][move.to.c] = boardState[move.from.r][move.from.c];
+                boardState[move.from.r][move.from.c] = '';
+                renderBoard();
+            }
+        }
+
+        createBoard();
+    </script>
+</body>
+</html>
