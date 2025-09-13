@@ -25,6 +25,10 @@
       margin: 0;
       font-size: 1.1em;
     }
+    .flags {
+      font-size: 2em;
+      margin-top: 10px;
+    }
     .prices {
       display: flex;
       flex-wrap: wrap;
@@ -52,10 +56,6 @@
       font-size: 1em;
       margin: 5px 0;
     }
-    .flags {
-      margin-top: 10px;
-      font-size: 1.4em;
-    }
     .updated {
       margin: 20px;
       font-size: 0.9em;
@@ -67,6 +67,7 @@
   <header>
     <h1>قیمت بیت‌کوین و ارزهای دیجیتال</h1>
     <h2>Bitcoin & Crypto Prices</h2>
+    <div class="flags">🇦🇫 🇮🇷</div>
   </header>
 
   <div class="prices" id="prices"></div>
@@ -93,7 +94,6 @@
             <div class="crypto">
               <div class="symbol">${c.symbol}</div>
               <div class="price">💵 USD: $${usd}</div>
-              <div class="flags">🇦🇫 🇮🇷</div>
             </div>
           `;
         }).join("");
