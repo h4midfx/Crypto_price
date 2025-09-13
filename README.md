@@ -49,8 +49,12 @@
       margin-bottom: 10px;
     }
     .price {
-      font-size: 0.95em;
-      line-height: 1.6em;
+      font-size: 1em;
+      margin: 5px 0;
+    }
+    .flags {
+      margin-top: 10px;
+      font-size: 1.4em;
     }
     .updated {
       margin: 20px;
@@ -79,47 +83,23 @@
 
     async function fetchPrices() {
       try {
-        const url = `https://api.coingecko.com/api/v3/simple/price?ids=${coins.map(c=>c.id).join(",")}&vs_currencies=usd,afn,irr`;
+        const url = `https://api.coingecko.com/api/v3/simple/price?ids=${coins.map(c=>c.id).join(",")}&vs_currencies=usd`;
         const res = await fetch(url);
         const data = await res.json();
 
         document.getElementById("prices").innerHTML = coins.map(c => {
-          const usd   = data[c.id]?.usd?.toLocaleString("en-US") || "N/A";
-          const afn   = data[c.id]?.afn?.toLocaleString("en-US") || "N/A";
-          const toman = data[c.id]?.irr ? (data[c.id].irr / 10).toLocaleString("fa-IR") : "N/A";
+          const usd = data[c.id]?.usd?.toLocaleString("en-US") || "N/A";
           return `
             <div class="crypto">
               <div class="symbol">${c.symbol}</div>
-              <div class="price">
-                💵 USD: $${usd}<br>
-                🇦🇫 AFN: ${afn}<br>
-                🇮🇷 تومان: ${toman}
-              </div>
+              <div class="price">💵 USD: $${usd}</div>
+              <div class="flags">🇦🇫 🇮🇷</div>
             </div>
           `;
         }).join("");
 
         const now = new Date();
-        function updateCard(symbol, usdPrice) {
-  const usd = usdPrice;
-  const afnRate = 72;       // Beispiel: 1 USD = 72 AFN
-  const irrRate = 42000;    // Beispiel: 1 USD = 42,000 IRR
-  const tomanRate = irrRate / 10;
-
-  const afn = (usd * afnRate).toLocaleString("en-US");
-  const toman = (usd * tomanRate).toLocaleString("fa-IR");
-
-  return `
-    <div class="crypto">
-      <div class="symbol">${symbol}</div>
-      <div class="price">
-        💵 USD: $${usd.toLocaleString("en-US")}<br>
-        🇦🇫 AFN: ${afn}<br>
-        🇮🇷 تومان: ${toman}
-      </div>
-    </div>
-  `;
-}document.getElementById("lastUpdate").textContent =
+        document.getElementById("lastUpdate").textContent =
           "Aktualisiert: " + now.toLocaleString();
       } catch (e) {
         console.error("Fehler beim Laden:", e);
