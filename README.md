@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+
 <html lang="fa">
 <head>
   <meta charset="UTF-8">
@@ -56,15 +56,15 @@
 </head>
 <body>
   <header>
-    <img src="https://upload.wikimedia.org/wikipedia/commons/5/5c/Flag_of_Afghanistan_%282004%E2%80%932021%29.svg" alt="پرچم افغانستان">
-    <h1>💰 قیمت لحظه‌ای ارزهای دیجیتال</h1>
+    <img src="https://share.google/images/699aFRetVMRl6gESN" alt="پرچم افغانستان">
+    <h1>💰 قیمت لحظه‌ای ارزهای دیجیتال (بر حسب USDT)</h1>
   </header>
 
   <table>
     <thead>
       <tr>
         <th>نماد</th>
-        <th>قیمت (USD)</th>
+        <th>قیمت (USDT)</th>
         <th>تغییر ۲۴ ساعته</th>
       </tr>
     </thead>
@@ -80,15 +80,14 @@
 
   <script>
     async function loadPrices() {
-      const coins = "bitcoin,ethereum,tether,binancecoin,ripple,cardano,dogecoin,solana,tron,polkadot";
-      const url = `https://api.coingecko.com/api/v3/simple/price?ids=${coins}&vs_currencies=usd&include_24hr_change=true`;
+      const coins = "bitcoin,ethereum,binancecoin,ripple,cardano,dogecoin,solana,tron,polkadot";
+      const url = `https://api.coingecko.com/api/v3/simple/price?ids=${coins}&vs_currencies=usdt&include_24hr_change=true`;
       const res = await fetch(url);
       const data = await res.json();
 
       const mapping = {
         bitcoin: "BTC",
         ethereum: "ETH",
-        tether: "USDT",
         binancecoin: "BNB",
         ripple: "XRP",
         cardano: "ADA",
@@ -102,13 +101,13 @@
       for (const id in mapping) {
         if (!data[id]) continue;
         const symbol = mapping[id];
-        const price = data[id].usd.toLocaleString();
-        const change = data[id].usd_24h_change.toFixed(2);
+        const price = data[id].usdt.toLocaleString();
+        const change = data[id].usdt_24h_change.toFixed(2);
         const cls = change >= 0 ? "up" : "down";
         html += `
           <tr>
             <td><b>${symbol}</b></td>
-            <td>$${price}</td>
+            <td>${price} USDT</td>
             <td class="${cls}">${change}%</td>
           </tr>
         `;
