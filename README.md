@@ -2,7 +2,7 @@
 <html lang="fa">
 <head>
   <meta charset="UTF-8">
-  <title>قیمت لحظه‌ای ارزها و دارایی‌ها</title>
+  <title>نرخ لحظه‌ای ارزهای دیجیتال</title>
   <style>
     body {
       font-family: sans-serif;
@@ -15,7 +15,10 @@
       border-radius: 8px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.2);
     }
-    h1 { margin-top: 15px; color: #222; }
+    h1 {
+      margin-top: 15px;
+      color: #222;
+    }
     table {
       margin: 20px auto;
       border-collapse: collapse;
@@ -24,8 +27,15 @@
       border-radius: 8px;
       overflow: hidden;
     }
-    th, td { padding: 12px 18px; border-bottom: 1px solid #eee; text-align: center; }
-    th { background: #fafafa; font-weight: bold; }
+    th, td {
+      padding: 12px 18px;
+      border-bottom: 1px solid #eee;
+      text-align: center;
+    }
+    th {
+      background: #fafafa;
+      font-weight: bold;
+    }
     .up { color: green; }
     .down { color: red; }
     .feedback {
@@ -37,13 +47,18 @@
       border-radius: 8px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
-    .feedback a { text-decoration: none; color: #0066cc; font-weight: bold; margin: 0 5px; }
+    .feedback a {
+      text-decoration: none;
+      color: #0066cc;
+      font-weight: bold;
+      margin: 0 5px;
+    }
   </style>
 </head>
 <body>
   <header>
-    <img src="https://upload.wikimedia.org/wikipedia/commons/5/5c/Flag_of_Afghanistan_%282004%E2%80%932021%29.svg" alt="">
-    <h1>💰 قیمت لحظه‌ای ارزها و دارایی‌ها</h1>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/5/5c/Flag_of_Afghanistan_%282004%E2%80%932021%29.svg" alt="پرچم افغانستان">
+    <h1>نرخ لحظه‌ای ارزهای دیجیتال</h1>
   </header>
 
   <table>
@@ -66,46 +81,51 @@
   </div>
 
   <script>
-    // داده نمونه قابل ویرایش
-    const assets = [
-      {name: "بیتکوین", price: 32000, change: 1.2},
-      {name: "اتریوم", price: 2100, change: -0.5},
-      {name: "ترون", price: 0.06, change: 0.3},
-      {name: "دوج", price: 0.065, change: -0.2},
-      {name: "XRP", price: 0.55, change: 1.1},
-      {name: "طلا", price: 1800, change: 0.5},
-      {name: "نقره", price: 25, change: -0.1},
-      {name: "دلار آمریکا", price: 1, change: 0},
-      {name: "پوند", price: 1.22, change: 0.2},
-      {name: "یورو", price: 1.08, change: -0.1}
+    const symbols = [
+      {name: "بیتکوین", binance: "BTCUSDT"},
+      {name: "اتریوم", binance: "ETHUSDT"},
+      {name: "ترون", binance: "TRXUSDT"},
+      {name: "دوج", binance: "DOGEUSDT"},
+      {name: "XRP", binance: "XRPUSDT"},
+      {name: "طلا", binance: "XAUUSDT"},
+      {name: "نقره", binance: "XAGUSDT"},
+      {name: "دلار آمریکا", binance: "BUSDUSDT"}, // نمونه برای دلار
+      {name: "پوند", binance: "GBPUSDT"},
+      {name: "یورو", binance: "EURUSDT"}
     ];
 
-    function loadPrices() {
+    async function loadPrices() {
       let html = "";
-      assets.forEach(a => {
-        const cls = a.change >= 0 ? "up" : "down";
-        html += `
-          <tr>
-            <td><b>${a.name}</b></td>
-            <td>${a.price.toLocaleString()} USDT</td>
-            <td class="${cls}">${a.change}%</td>
-          </tr>
-        `;
-      });
+      for (let sym of symbols) {
+        try {
+          // قیمت فعلی
+          const resPrice = await fetch(`https://api.binance.com/api/v3/ticker/price?symbol=${sym.binance}`);
+          const priceData = await resPrice.json();
+          const price = parseFloat(priceData.price).toFixed(4);
+
+          // تغییر 24 ساعته
+          const res24h = await fetch(`https://api.binance.com/api/v3/ticker/24hr?symbol=${sym.binance}`);
+          const changeData = await res24h.json();
+          const change = parseFloat(changeData.priceChangePercent).toFixed(2);
+          const cls = change >= 0 ? "up" : "down";
+
+          html += `
+            <tr>
+              <td><b>${sym.name}</b></td>
+              <td>${price} USDT</td>
+              <td class="${cls}">${change}%</td>
+            </tr>
+          `;
+        } catch (err) {
+          html += `<tr><td colspan="3">خطا در دریافت ${sym.name}</td></tr>`;
+          console.error(err);
+        }
+      }
       document.getElementById("prices").innerHTML = html;
     }
 
     loadPrices();
-
-    // شبیه‌سازی آپدیت قیمت هر 10 ثانیه
-    setInterval(() => {
-      assets.forEach(a => {
-        const delta = (Math.random()*2-1).toFixed(2);
-        a.price = (a.price * (1 + delta/100)).toFixed(2);
-        a.change = delta;
-      });
-      loadPrices();
-    }, 10000);
+    setInterval(loadPrices, 10000); // هر 10 ثانیه آپدیت
   </script>
 </body>
 </html>
