@@ -1,115 +1,123 @@
+<!DOCTYPE html>
 <html lang="fa">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>قیمت بیت‌کوین و ارزهای دیجیتال</title>
+  <title>قیمت لحظه‌ای ارزهای دیجیتال</title>
   <style>
     body {
-      font-family: "Segoe UI", sans-serif;
-      margin: 0;
-      padding: 0;
-      background: #f9fafc;
-      color: #222;
+      font-family: sans-serif;
+      background: #f0f2f5;
       text-align: center;
-    }
-    header {
-      padding: 20px;
-      background: linear-gradient(135deg, #007bff, #00c6ff);
-      color: white;
-    }
-    h1 {
-      margin: 10px 0 5px;
-    }
-    h2 {
-      font-weight: normal;
-      margin: 0;
-      font-size: 1.1em;
-    }
-    .flags {
-      font-size: 2em;
-      margin-top: 10px;
-    }
-    .prices {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 20px;
       padding: 30px;
     }
-    .crypto {
+    header img {
+      width: 120px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+    h1 {
+      margin-top: 15px;
+      color: #222;
+    }
+    table {
+      margin: 20px auto;
+      border-collapse: collapse;
       background: white;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      padding: 20px;
-      width: 200px;
-      transition: transform 0.2s;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      border-radius: 8px;
+      overflow: hidden;
     }
-    .crypto:hover {
-      transform: translateY(-6px);
+    th, td {
+      padding: 12px 18px;
+      border-bottom: 1px solid #eee;
+      text-align: center;
     }
-    .symbol {
-      font-size: 1.2em;
+    th {
+      background: #fafafa;
       font-weight: bold;
-      margin-bottom: 10px;
     }
-    .price {
-      font-size: 1em;
-      margin: 5px 0;
+    .up { color: green; }
+    .down { color: red; }
+    .feedback {
+      margin-top: 25px;
+      font-size: 16px;
+      background: #fff;
+      display: inline-block;
+      padding: 12px 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
-    .updated {
-      margin: 20px;
-      font-size: 0.9em;
-      color: gray;
+    .feedback a {
+      text-decoration: none;
+      color: #0066cc;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
   <header>
-    <h1>قیمت بیت‌کوین و ارزهای دیجیتال</h1>
-    <h2>Bitcoin & Crypto Prices</h2>
-    <div class="flags">🇦🇫 🇮🇷</div>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/5/5c/Flag_of_Afghanistan_%282004%E2%80%932021%29.svg" alt="پرچم افغانستان">
+    <h1>💰 قیمت لحظه‌ای ارزهای دیجیتال</h1>
   </header>
 
-  <div class="prices" id="prices"></div>
-  <div class="updated" id="lastUpdate">Aktualisiert: …</div>
+  <table>
+    <thead>
+      <tr>
+        <th>نماد</th>
+        <th>قیمت (USD)</th>
+        <th>تغییر ۲۴ ساعته</th>
+      </tr>
+    </thead>
+    <tbody id="prices">
+      <tr><td colspan="3">در حال بارگذاری...</td></tr>
+    </tbody>
+  </table>
+
+  <div class="feedback">
+    💡 پیشنهادی داری؟  
+    <a href="mailto:yourmail@example.com">برای ما بفرست</a>
+  </div>
 
   <script>
-    const coins = [
-      { id: "bitcoin", symbol: "BTC" },
-      { id: "ethereum", symbol: "ETH" },
-      { id: "ripple", symbol: "XRP" },
-      { id: "litecoin", symbol: "LTC" },
-      { id: "dogecoin", symbol: "DOGE" }
-    ];
+    async function loadPrices() {
+      const coins = "bitcoin,ethereum,tether,binancecoin,ripple,cardano,dogecoin,solana,tron,polkadot";
+      const url = `https://api.coingecko.com/api/v3/simple/price?ids=${coins}&vs_currencies=usd&include_24hr_change=true`;
+      const res = await fetch(url);
+      const data = await res.json();
 
-    async function fetchPrices() {
-      try {
-        const url = `https://api.coingecko.com/api/v3/simple/price?ids=${coins.map(c=>c.id).join(",")}&vs_currencies=usd`;
-        const res = await fetch(url);
-        const data = await res.json();
+      const mapping = {
+        bitcoin: "BTC",
+        ethereum: "ETH",
+        tether: "USDT",
+        binancecoin: "BNB",
+        ripple: "XRP",
+        cardano: "ADA",
+        dogecoin: "DOGE",
+        solana: "SOL",
+        tron: "TRX",
+        polkadot: "DOT"
+      };
 
-        document.getElementById("prices").innerHTML = coins.map(c => {
-          const usd = data[c.id]?.usd?.toLocaleString("en-US") || "N/A";
-          return `
-            <div class="crypto">
-              <div class="symbol">${c.symbol}</div>
-              <div class="price">💵 USD: $${usd}</div>
-            </div>
-          `;
-        }).join("");
-
-        const now = new Date();
-        document.getElementById("lastUpdate").textContent =
-          "Aktualisiert: " + now.toLocaleString();
-      } catch (e) {
-        console.error("Fehler beim Laden:", e);
-        document.getElementById("prices").innerHTML =
-          "<p style='color:red'>⚠️ Preise konnten nicht geladen werden.</p>";
+      let html = "";
+      for (const id in mapping) {
+        if (!data[id]) continue;
+        const symbol = mapping[id];
+        const price = data[id].usd.toLocaleString();
+        const change = data[id].usd_24h_change.toFixed(2);
+        const cls = change >= 0 ? "up" : "down";
+        html += `
+          <tr>
+            <td><b>${symbol}</b></td>
+            <td>$${price}</td>
+            <td class="${cls}">${change}%</td>
+          </tr>
+        `;
       }
+      document.getElementById("prices").innerHTML = html;
     }
 
-    fetchPrices();
-    setInterval(fetchPrices, 60000);
+    loadPrices();
+    setInterval(loadPrices, 10000); // هر ۱۰ ثانیه آپدیت
   </script>
 </body>
 </html>
