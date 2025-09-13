@@ -1,4 +1,4 @@
-
+<!DOCTYPE html>
 <html lang="fa">
 <head>
 <meta charset="UTF-8">
@@ -168,7 +168,7 @@ async function loadCrypto(){
 loadCrypto();
 setInterval(loadCrypto,10000);
 
-// بارگذاری اخبار اقتصادی فارسی
+// بارگذاری اخبار اقتصادی فارسی با RSS
 async function loadNews(){
   const rssUrl = 'https://www.farsnews.ir/rss/economy';
   const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`;
@@ -195,5 +195,6 @@ async function loadNews(){
 loadNews();
 setInterval(loadNews, 5*60*1000);
 </script>
+
 </body>
 </html>
