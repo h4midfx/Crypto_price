@@ -2,7 +2,7 @@
 <html lang="fa">
 <head>
   <meta charset="UTF-8">
-  <title>قیمت لحظه‌ای ارزهای دیجیتال</title>
+  <title>قیمت لحظه‌ای ارزها و دارایی‌ها</title>
   <style>
     body {
       font-family: sans-serif;
@@ -42,14 +42,14 @@
 </head>
 <body>
   <header>
-    <img src="https://upload.wikimedia.org/wikipedia/commons/5/5c/Flag_of_Afghanistan_%282004%E2%80%932021%29.svg" alt="پرچم افغانستان">
-    <h1>💰 قیمت لحظه‌ای ارزهای دیجیتال (USDT)</h1>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/5/5c/Flag_of_Afghanistan_%282004%E2%80%932021%29.svg" alt="">
+    <h1>💰 قیمت لحظه‌ای ارزها و دارایی‌ها</h1>
   </header>
 
   <table>
     <thead>
       <tr>
-        <th>نماد</th>
+        <th>نام</th>
         <th>قیمت (USDT)</th>
         <th>تغییر ۲۴ ساعته</th>
       </tr>
@@ -66,28 +66,29 @@
   </div>
 
   <script>
-    // داده نمونه برای نمایش بدون fetch
-    const sampleData = [
-      {symbol:"BTC", price: 32000, change: 1.2},
-      {symbol:"ETH", price: 2100, change: -0.5},
-      {symbol:"BNB", price: 310, change: 0.8},
-      {symbol:"XRP", price: 0.55, change: -1.3},
-      {symbol:"ADA", price: 1.25, change: 0.4},
-      {symbol:"DOGE", price: 0.065, change: -0.2},
-      {symbol:"SOL", price: 38, change: 2.5},
-      {symbol:"TRX", price: 0.06, change: -0.1},
-      {symbol:"DOT", price: 15, change: 0.7}
+    // داده نمونه قابل ویرایش
+    const assets = [
+      {name: "بیتکوین", price: 32000, change: 1.2},
+      {name: "اتریوم", price: 2100, change: -0.5},
+      {name: "ترون", price: 0.06, change: 0.3},
+      {name: "دوج", price: 0.065, change: -0.2},
+      {name: "XRP", price: 0.55, change: 1.1},
+      {name: "طلا", price: 1800, change: 0.5},
+      {name: "نقره", price: 25, change: -0.1},
+      {name: "دلار آمریکا", price: 1, change: 0},
+      {name: "پوند", price: 1.22, change: 0.2},
+      {name: "یورو", price: 1.08, change: -0.1}
     ];
 
     function loadPrices() {
       let html = "";
-      sampleData.forEach(coin => {
-        const cls = coin.change >= 0 ? "up" : "down";
+      assets.forEach(a => {
+        const cls = a.change >= 0 ? "up" : "down";
         html += `
           <tr>
-            <td><b>${coin.symbol}</b></td>
-            <td>${coin.price.toLocaleString()} USDT</td>
-            <td class="${cls}">${coin.change}%</td>
+            <td><b>${a.name}</b></td>
+            <td>${a.price.toLocaleString()} USDT</td>
+            <td class="${cls}">${a.change}%</td>
           </tr>
         `;
       });
@@ -95,12 +96,13 @@
     }
 
     loadPrices();
+
     // شبیه‌سازی آپدیت قیمت هر 10 ثانیه
     setInterval(() => {
-      sampleData.forEach(c => {
-        const delta = (Math.random()*2-1).toFixed(2); // تغییر کوچک تصادفی
-        c.price = (c.price * (1 + delta/100)).toFixed(2);
-        c.change = delta;
+      assets.forEach(a => {
+        const delta = (Math.random()*2-1).toFixed(2);
+        a.price = (a.price * (1 + delta/100)).toFixed(2);
+        a.change = delta;
       });
       loadPrices();
     }, 10000);
