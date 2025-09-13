@@ -100,7 +100,26 @@
         }).join("");
 
         const now = new Date();
-        document.getElementById("lastUpdate").textContent =
+        function updateCard(symbol, usdPrice) {
+  const usd = usdPrice;
+  const afnRate = 72;       // Beispiel: 1 USD = 72 AFN
+  const irrRate = 42000;    // Beispiel: 1 USD = 42,000 IRR
+  const tomanRate = irrRate / 10;
+
+  const afn = (usd * afnRate).toLocaleString("en-US");
+  const toman = (usd * tomanRate).toLocaleString("fa-IR");
+
+  return `
+    <div class="crypto">
+      <div class="symbol">${symbol}</div>
+      <div class="price">
+        💵 USD: $${usd.toLocaleString("en-US")}<br>
+        🇦🇫 AFN: ${afn}<br>
+        🇮🇷 تومان: ${toman}
+      </div>
+    </div>
+  `;
+}document.getElementById("lastUpdate").textContent =
           "Aktualisiert: " + now.toLocaleString();
       } catch (e) {
         console.error("Fehler beim Laden:", e);
