@@ -15,10 +15,7 @@
       border-radius: 8px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.2);
     }
-    h1 {
-      margin-top: 15px;
-      color: #222;
-    }
+    h1 { margin-top: 15px; color: #222; }
     table {
       margin: 20px auto;
       border-collapse: collapse;
@@ -27,15 +24,8 @@
       border-radius: 8px;
       overflow: hidden;
     }
-    th, td {
-      padding: 12px 18px;
-      border-bottom: 1px solid #eee;
-      text-align: center;
-    }
-    th {
-      background: #fafafa;
-      font-weight: bold;
-    }
+    th, td { padding: 12px 18px; border-bottom: 1px solid #eee; text-align: center; }
+    th { background: #fafafa; font-weight: bold; }
     .up { color: green; }
     .down { color: red; }
     .feedback {
@@ -47,18 +37,13 @@
       border-radius: 8px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
-    .feedback a {
-      text-decoration: none;
-      color: #0066cc;
-      font-weight: bold;
-      margin: 0 5px;
-    }
+    .feedback a { text-decoration: none; color: #0066cc; font-weight: bold; margin: 0 5px; }
   </style>
 </head>
 <body>
   <header>
     <img src="https://upload.wikimedia.org/wikipedia/commons/5/5c/Flag_of_Afghanistan_%282004%E2%80%932021%29.svg" alt="پرچم افغانستان">
-    <h1>💰 قیمت لحظه‌ای ارزهای دیجیتال (بر حسب USDT)</h1>
+    <h1>💰 قیمت لحظه‌ای ارزهای دیجیتال (USDT)</h1>
   </header>
 
   <table>
@@ -81,50 +66,44 @@
   </div>
 
   <script>
-    async function loadPrices() {
-      const coins = "bitcoin,ethereum,binancecoin,ripple,cardano,dogecoin,solana,tron,polkadot";
-      const url = `https://api.coingecko.com/api/v3/simple/price?ids=${coins}&vs_currencies=usdt&include_24hr_change=true`;
+    // داده نمونه برای نمایش بدون fetch
+    const sampleData = [
+      {symbol:"BTC", price: 32000, change: 1.2},
+      {symbol:"ETH", price: 2100, change: -0.5},
+      {symbol:"BNB", price: 310, change: 0.8},
+      {symbol:"XRP", price: 0.55, change: -1.3},
+      {symbol:"ADA", price: 1.25, change: 0.4},
+      {symbol:"DOGE", price: 0.065, change: -0.2},
+      {symbol:"SOL", price: 38, change: 2.5},
+      {symbol:"TRX", price: 0.06, change: -0.1},
+      {symbol:"DOT", price: 15, change: 0.7}
+    ];
 
-      try {
-        const res = await fetch(url);
-        const data = await res.json();
-
-        const mapping = {
-          bitcoin: "BTC",
-          ethereum: "ETH",
-          binancecoin: "BNB",
-          ripple: "XRP",
-          cardano: "ADA",
-          dogecoin: "DOGE",
-          solana: "SOL",
-          tron: "TRX",
-          polkadot: "DOT"
-        };
-
-        let html = "";
-        for (const id in mapping) {
-          if (!data[id]) continue;
-          const symbol = mapping[id];
-          const price = data[id].usdt.toLocaleString();
-          const change = data[id].usdt_24h_change.toFixed(2);
-          const cls = change >= 0 ? "up" : "down";
-          html += `
-            <tr>
-              <td><b>${symbol}</b></td>
-              <td>${price} USDT</td>
-              <td class="${cls}">${change}%</td>
-            </tr>
-          `;
-        }
-        document.getElementById("prices").innerHTML = html;
-      } catch (error) {
-        document.getElementById("prices").innerHTML = `<tr><td colspan="3">⚠ خطا در بارگذاری داده‌ها</td></tr>`;
-        console.error("Error loading data:", error);
-      }
+    function loadPrices() {
+      let html = "";
+      sampleData.forEach(coin => {
+        const cls = coin.change >= 0 ? "up" : "down";
+        html += `
+          <tr>
+            <td><b>${coin.symbol}</b></td>
+            <td>${coin.price.toLocaleString()} USDT</td>
+            <td class="${cls}">${coin.change}%</td>
+          </tr>
+        `;
+      });
+      document.getElementById("prices").innerHTML = html;
     }
 
     loadPrices();
-    setInterval(loadPrices, 10000); // هر ۱۰ ثانیه آپدیت
+    // شبیه‌سازی آپدیت قیمت هر 10 ثانیه
+    setInterval(() => {
+      sampleData.forEach(c => {
+        const delta = (Math.random()*2-1).toFixed(2); // تغییر کوچک تصادفی
+        c.price = (c.price * (1 + delta/100)).toFixed(2);
+        c.change = delta;
+      });
+      loadPrices();
+    }, 10000);
   </script>
 </body>
 </html>
