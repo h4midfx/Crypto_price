@@ -51,12 +51,13 @@
       text-decoration: none;
       color: #0066cc;
       font-weight: bold;
+      margin: 0 5px;
     }
   </style>
 </head>
 <body>
   <header>
-    <img src="https://share.google/images/TeU5xhywUxmPAKeBB" alt="پرچم افغانستان">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/5/5c/Flag_of_Afghanistan_%282004%E2%80%932021%29.svg" alt="پرچم افغانستان">
     <h1>💰 قیمت لحظه‌ای ارزهای دیجیتال (بر حسب USDT)</h1>
   </header>
 
@@ -75,44 +76,51 @@
 
   <div class="feedback">
     💡 پیشنهادی داری؟  
-    <a href="mailto:yourmail@example.com">برای ما بفرست</a>
+    <a href="mailto:Bhack050@gmail.com">ایمیل بده</a> | 
+    <a href="https://t.me/username" target="_blank">تلگرام</a>
   </div>
 
   <script>
     async function loadPrices() {
       const coins = "bitcoin,ethereum,binancecoin,ripple,cardano,dogecoin,solana,tron,polkadot";
       const url = `https://api.coingecko.com/api/v3/simple/price?ids=${coins}&vs_currencies=usdt&include_24hr_change=true`;
-      const res = await fetch(url);
-      const data = await res.json();
 
-      const mapping = {
-        bitcoin: "BTC",
-        ethereum: "ETH",
-        binancecoin: "BNB",
-        ripple: "XRP",
-        cardano: "ADA",
-        dogecoin: "DOGE",
-        solana: "SOL",
-        tron: "TRX",
-        polkadot: "DOT"
-      };
+      try {
+        const res = await fetch(url);
+        const data = await res.json();
 
-      let html = "";
-      for (const id in mapping) {
-        if (!data[id]) continue;
-        const symbol = mapping[id];
-        const price = data[id].usdt.toLocaleString();
-        const change = data[id].usdt_24h_change.toFixed(2);
-        const cls = change >= 0 ? "up" : "down";
-        html += `
-          <tr>
-            <td><b>${symbol}</b></td>
-            <td>${price} USDT</td>
-            <td class="${cls}">${change}%</td>
-          </tr>
-        `;
+        const mapping = {
+          bitcoin: "BTC",
+          ethereum: "ETH",
+          binancecoin: "BNB",
+          ripple: "XRP",
+          cardano: "ADA",
+          dogecoin: "DOGE",
+          solana: "SOL",
+          tron: "TRX",
+          polkadot: "DOT"
+        };
+
+        let html = "";
+        for (const id in mapping) {
+          if (!data[id]) continue;
+          const symbol = mapping[id];
+          const price = data[id].usdt.toLocaleString();
+          const change = data[id].usdt_24h_change.toFixed(2);
+          const cls = change >= 0 ? "up" : "down";
+          html += `
+            <tr>
+              <td><b>${symbol}</b></td>
+              <td>${price} USDT</td>
+              <td class="${cls}">${change}%</td>
+            </tr>
+          `;
+        }
+        document.getElementById("prices").innerHTML = html;
+      } catch (error) {
+        document.getElementById("prices").innerHTML = `<tr><td colspan="3">⚠ خطا در بارگذاری داده‌ها</td></tr>`;
+        console.error("Error loading data:", error);
       }
-      document.getElementById("prices").innerHTML = html;
     }
 
     loadPrices();
