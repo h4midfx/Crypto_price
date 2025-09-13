@@ -34,7 +34,17 @@
     {name:"Cardano", binance:"ADAUSDT", logo:"https://cryptologos.cc/logos/cardano-ada-logo.png"},
     {name:"Solana", binance:"SOLUSDT", logo:"https://cryptologos.cc/logos/solana-sol-logo.png"},
     {name:"Polkadot", binance:"DOTUSDT", logo:"https://cryptologos.cc/logos/polkadot-dot-logo.png"},
-    {name:"Shiba Inu", binance:"SHIBUSDT", logo:"https://cryptologos.cc/logos/shiba-inu-shib-logo.png"}
+    {name:"Shiba Inu", binance:"SHIBUSDT", logo:"https://cryptologos.cc/logos/shiba-inu-shib-logo.png"},
+    {name:"Avalanche", binance:"AVAXUSDT", logo:"https://cryptologos.cc/logos/avalanche-avax-logo.png"},
+    {name:"Polygon", binance:"MATICUSDT", logo:"https://cryptologos.cc/logos/polygon-matic-logo.png"},
+    {name:"Dogelon Mars", binance:"ELONUSDT", logo:"https://cryptologos.cc/logos/dogelon-mars-elon-logo.png"},
+    {name:"Stellar", binance:"XLMUSDT", logo:"https://cryptologos.cc/logos/stellar-xlm-logo.png"},
+    {name:"Cosmos", binance:"ATOMUSDT", logo:"https://cryptologos.cc/logos/cosmos-atom-logo.png"},
+    {name:"VeChain", binance:"VETUSDT", logo:"https://cryptologos.cc/logos/vechain-vet-logo.png"},
+    {name:"TRON", binance:"TRXUSDT", logo:"https://cryptologos.cc/logos/tron-trx-logo.png"},
+    {name:"Algorand", binance:"ALGOUSDT", logo:"https://cryptologos.cc/logos/algorand-algo-logo.png"},
+    {name:"NEO", binance:"NEOUSDT", logo:"https://cryptologos.cc/logos/neo-neo-logo.png"},
+    {name:"Tezos", binance:"XTZUSDT", logo:"https://cryptologos.cc/logos/tezos-xtz-logo.png"}
   ];
   const fiatSymbols = [
     {name:"دلار آمریکا", code:"USD"},
