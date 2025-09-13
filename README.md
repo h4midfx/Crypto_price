@@ -4,7 +4,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>قیمت بیت‌کوین و ارزهای دیجیتال | Crypto Prices</title>
   <style>
-    /* Allgemeines Layout */
     body {
       font-family: "Segoe UI", Arial, sans-serif;
       text-align: center;
@@ -45,7 +44,6 @@
       color: #ccc;
     }
 
-    /* Dark/Light Toggle */
     .toggle-btn {
       margin: 15px;
       padding: 10px 20px;
@@ -62,7 +60,6 @@
       background: #0056cc;
     }
 
-    /* Krypto-Karten */
     .prices {
       display: flex;
       flex-wrap: wrap;
@@ -76,7 +73,7 @@
       background: white;
       border-radius: 12px;
       padding: 20px;
-      width: 200px;
+      width: 220px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.15);
       transition: transform 0.2s, background 0.3s, color 0.3s;
     }
@@ -95,7 +92,7 @@
     }
 
     .price {
-      font-size: 1.1em;
+      font-size: 1em;
       margin: 5px 0;
     }
 
@@ -111,16 +108,12 @@
 </head>
 <body>
   <header>
-    <!-- Afghanische Flagge -->
     <img id="flag" src="https://wallpapercave.com/wp/wp4056551.jpg" alt="Afghan Flag" />
-    <!-- Titel -->
     <h1>قیمت بیت‌کوین و ارزهای دیجیتال</h1>
     <h2>Bitcoin & Crypto Prices</h2>
-    <!-- Dark/Light Button -->
     <button class="toggle-btn" onclick="toggleTheme()">🌙 / ☀️</button>
   </header>
 
-  <!-- Preise -->
   <div class="prices">
     <div class="crypto-card" id="btc">
       <div class="crypto-title">BTC</div>
@@ -144,14 +137,13 @@
     </div>
   </div>
 
-  <!-- Letzte Aktualisierung -->
   <div class="updated" id="lastUpdate">Aktualisiert: …</div>
 
   <script>
     async function fetchPrices() {
       try {
         const response = await fetch(
-          'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,ripple,litecoin,dogecoin&vs_currencies=usd,afn'
+          'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,ripple,litecoin,dogecoin&vs_currencies=usd,afn,irr'
         );
         const data = await response.json();
 
@@ -170,9 +162,16 @@
     }
 
     function updateCard(id, symbol, coin) {
+      const toman = (coin.irr / 10).toLocaleString("fa-IR");
+      const usd = coin.usd.toLocaleString("en-US");
+      const afn = coin.afn.toLocaleString("en-US");
+
       const card = document.getElementById(id);
-      card.querySelector(".price").textContent =
-        `$${coin.usd} | AFN ${coin.afn}`;
+      card.querySelector(".price").innerHTML = `
+        💵 USD: $${usd}<br>
+        🇦🇫 AFN: ${afn}<br>
+        🇮🇷 Toman: ${toman}
+      `;
     }
 
     function toggleTheme() {
