@@ -56,12 +56,38 @@ img {
 
 <div id="inhalt"></div>
 
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
 <script>
+/* ==============================
+   🔴 HIER DEINE FIREBASE DATEN
+   ============================== */
+const firebaseConfig = {
+  apiKey: "AIzaSyDQvWVcwDQivNGysnvfm4fBBykNbYtnDZc",
+  authDomain: "castel-game.firebaseapp.com",
+  databaseURL: "https://castel-game-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "castel-game",
+  storageBucket: "castel-game.firebasestorage.app",
+  messagingSenderId: "504558378124",
+  appId: "1:504558378124:web:f494c563b755454770efa9"
+};
+
+/* Firebase starten */
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+/* Inhalt */
 const inhalt = document.getElementById("inhalt");
 
+/* ==============================
+   Neue Daten Formular
+   ============================== */
 function neueDaten() {
     inhalt.innerHTML = `
         <h2>Neue Attacke</h2>
+
         <p>Wen hast du zuletzt angegriffen?</p>
         <input type="text" id="name" placeholder="Name eingeben">
 
@@ -73,6 +99,9 @@ function neueDaten() {
     `;
 }
 
+/* ==============================
+   Daten SPEICHERN (ONLINE)
+   ============================== */
 function speichern() {
     const name = document.getElementById("name").value;
     const bild = document.getElementById("bild").files[0];
@@ -84,38 +113,49 @@ function speichern() {
 
     const reader = new FileReader();
     reader.onload = function() {
-        let daten = JSON.parse(localStorage.getItem("castelDaten")) || [];
-        daten.push({
+        db.ref("castelDaten").push({
             name: name,
-            bild: reader.result
+            bild: reader.result,
+            zeit: new Date().toLocaleString()
         });
 
-        localStorage.setItem("castelDaten", JSON.stringify(daten));
-        alert("Daten gespeichert!");
+        alert("Daten online gespeichert!");
         datenAnzeigen();
     };
     reader.readAsDataURL(bild);
 }
 
+/* ==============================
+   Daten ANZEIGEN (ONLINE)
+   ============================== */
 function datenAnzeigen() {
-    let daten = JSON.parse(localStorage.getItem("castelDaten")) || [];
     inhalt.innerHTML = "<h2>Gespeicherte Daten</h2>";
 
-    if (daten.length === 0) {
-        inhalt.innerHTML += "<p>Noch keine Daten vorhanden.</p>";
-        return;
-    }
+    db.ref("castelDaten").once("value", snapshot => {
+        const daten = snapshot.val();
 
-    daten.forEach(eintrag => {
-        inhalt.innerHTML += `
-            <div class="entry">
-                <strong>Letzte Attacke auf:</strong> ${eintrag.name}
-                <br>
-                <img src="${eintrag.bild}">
-            </div>
-        `;
+        if (!daten) {
+            inhalt.innerHTML += "<p>Noch keine Daten vorhanden.</p>";
+            return;
+        }
+
+        for (let key in daten) {
+            const e = daten[key];
+            inhalt.innerHTML += `
+                <div class="entry">
+                    <strong>Letzte Attacke auf:</strong> ${e.name}<br>
+                    <small>${e.zeit}</small><br>
+                    <img src="${e.bild}">
+                </div>
+            `;
+        }
     });
 }
+
+/* ==============================
+   Automatisch beim Start laden
+   ============================== */
+window.onload = datenAnzeigen;
 </script>
 
 </body>
