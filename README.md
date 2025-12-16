@@ -49,8 +49,8 @@ img {
 <h1>🏰 Castel Alliance</h1>
 
 <!-- Menü -->
-<button onclick="neueDaten()">➕ Neue Daten hinzufügen</button>
-<button onclick="datenAnzeigen()">📂 Gespeicherte Daten ansehen</button>
+<button onclick="neueDaten()">➕ Neue Daten hinzufügen / Add New Data / افزودن داده جدید</button>
+<button onclick="datenAnzeigen()">📂 Gespeicherte Daten ansehen / View Saved Data / مشاهده داده‌های ذخیره‌شده</button>
 
 <hr>
 
@@ -65,13 +65,13 @@ img {
    🔴 HIER DEINE FIREBASE DATEN
    ============================== */
 const firebaseConfig = {
-  apiKey: "AIzaSyDQvWVcwDQivNGysnvfm4fBBykNbYtnDZc",
-  authDomain: "castel-game.firebaseapp.com",
-  databaseURL: "https://castel-game-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "castel-game",
-  storageBucket: "castel-game.firebasestorage.app",
-  messagingSenderId: "504558378124",
-  appId: "1:504558378124:web:f494c563b755454770efa9"
+  apiKey: "DEIN_API_KEY",
+  authDomain: "DEIN_PROJEKT.firebaseapp.com",
+  databaseURL: "https://DEIN_PROJEKT.firebaseio.com",
+  projectId: "DEIN_PROJEKT",
+  storageBucket: "DEIN_PROJEKT.appspot.com",
+  messagingSenderId: "DEINE_ID",
+  appId: "DEINE_APP_ID"
 };
 
 /* Firebase starten */
@@ -86,16 +86,16 @@ const inhalt = document.getElementById("inhalt");
    ============================== */
 function neueDaten() {
     inhalt.innerHTML = `
-        <h2>Neue Attacke</h2>
+        <h2>Neue Attacke / New Attack / حمله جدید</h2>
 
-        <p>Wen hast du zuletzt angegriffen?</p>
-        <input type="text" id="name" placeholder="Name eingeben">
+        <p>Wen hast du zuletzt angegriffen? / Who did you attack last? / آخرین حمله به کی بود؟</p>
+        <input type="text" id="name" placeholder="Name eingeben / Enter Name / وارد کردن نام">
 
-        <p>Bitte lade ein Bild hoch:</p>
+        <p>Bitte lade ein Bild hoch / Please upload an image / لطفاً یک تصویر آپلود کنید:</p>
         <input type="file" id="bild" accept="image/*">
 
         <br><br>
-        <button onclick="speichern()">Speichern</button>
+        <button onclick="speichern()">Speichern / Save / ذخیره</button>
     `;
 }
 
@@ -107,7 +107,7 @@ function speichern() {
     const bild = document.getElementById("bild").files[0];
 
     if (!name || !bild) {
-        alert("Bitte Name und Bild eingeben!");
+        alert("Bitte Name und Bild eingeben! / Please enter name and image! / لطفاً نام و تصویر را وارد کنید");
         return;
     }
 
@@ -119,7 +119,7 @@ function speichern() {
             zeit: new Date().toLocaleString()
         });
 
-        alert("Daten online gespeichert!");
+        alert("Daten online gespeichert! / Data saved online! / داده‌ها آنلاین ذخیره شدند!");
         datenAnzeigen();
     };
     reader.readAsDataURL(bild);
@@ -129,13 +129,13 @@ function speichern() {
    Daten ANZEIGEN (ONLINE)
    ============================== */
 function datenAnzeigen() {
-    inhalt.innerHTML = "<h2>Gespeicherte Daten</h2>";
+    inhalt.innerHTML = "<h2>Gespeicherte Daten / Saved Data / داده‌های ذخیره‌شده</h2>";
 
     db.ref("castelDaten").once("value", snapshot => {
         const daten = snapshot.val();
 
         if (!daten) {
-            inhalt.innerHTML += "<p>Noch keine Daten vorhanden.</p>";
+            inhalt.innerHTML += "<p>Noch keine Daten vorhanden. / No data available. / داده‌ای موجود نیست</p>";
             return;
         }
 
@@ -143,8 +143,8 @@ function datenAnzeigen() {
             const e = daten[key];
             inhalt.innerHTML += `
                 <div class="entry">
-                    <strong>Letzte Attacke auf:</strong> ${e.name}<br>
-                    <small>${e.zeit}</small><br>
+                    <strong>Letzte Attacke auf:</strong> ${e.name} / Last attack on: ${e.name} / آخرین حمله به: ${e.name}<br>
+                    <small>${e.zeit} / Time / زمان</small><br>
                     <img src="${e.bild}">
                 </div>
             `;
