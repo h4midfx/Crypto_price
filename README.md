@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -64,6 +64,9 @@ img {
     color: #fff;
     margin-top: 5px;
 }
+.entry {
+  text-align: center;
+}
 </style>
 </head>
 <body>
@@ -76,7 +79,7 @@ img {
 </div>
 
 <h1>🏰 Kushan Empire</h1>
-
+<p></p>
 <!-- Abteilungsauswahl -->
 <div id="section-select" style="text-align:center; margin-bottom:10px;">
     <button onclick="selectSection('kushan1')">🏰 Kushan 1 🔒</button>
@@ -87,7 +90,6 @@ img {
 <div style="text-align:center; margin-bottom:10px;">
     <button onclick="neueDaten()">➕ Add New Data</button>
     <button onclick="datenAnzeigen()">📂 View Saved Data</button>
-    <button class="admin-btn" onclick="adminLogin()">🔑 Admin Login</button>
 </div>
 
 <hr>
@@ -264,6 +266,7 @@ function datenAnzeigen(){
             inhalt.innerHTML += `<p>${texts[currentLang].noData}</p>`;
             return;
         }
+        
         for(let key in daten){
             const e = daten[key];
             let html = `
